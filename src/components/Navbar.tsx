@@ -27,6 +27,23 @@ export default function Navbar({ genres }: NavbarProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Handle menu open (clear any pending close)
+    const handleMenuOpen = () => {
+        if (closeTimeoutRef.current) {
+            clearTimeout(closeTimeoutRef.current);
+            closeTimeoutRef.current = null;
+        }
+        setIsMenuOpen(true);
+    };
+
+    // Handle menu close with delay
+    const handleMenuClose = () => {
+        closeTimeoutRef.current = setTimeout(() => {
+            setIsMenuOpen(false);
+        }, 200); // 200ms delay before closing
+    };
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -36,7 +53,12 @@ export default function Navbar({ genres }: NavbarProps) {
             }
         }
         document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            if (closeTimeoutRef.current) {
+                clearTimeout(closeTimeoutRef.current);
+            }
+        };
     }, []);
 
     return (
@@ -58,8 +80,8 @@ export default function Navbar({ genres }: NavbarProps) {
                         <div
                             ref={dropdownRef}
                             className="relative hidden lg:block"
-                            onMouseEnter={() => setIsMenuOpen(true)}
-                            onMouseLeave={() => setIsMenuOpen(false)}
+                            onMouseEnter={handleMenuOpen}
+                            onMouseLeave={handleMenuClose}
                         >
                             <button
                                 className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#c7d5e0] hover:text-white transition-colors"
