@@ -3,9 +3,11 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ChevronDown, Menu, ShoppingCart } from 'lucide-react';
+import { ChevronDown, Menu } from 'lucide-react';
 import { useCurrency, CurrencyCode } from '@/contexts/CurrencyContext';
 import GlobalSearch from './GlobalSearch';
+import UserDropdown from './UserDropdown';
+import CartBadge from './CartBadge';
 
 interface NavbarProps {
     genres: string[];
@@ -79,7 +81,7 @@ export default function Navbar({ genres }: NavbarProps) {
                                                 {TOP_CATEGORIES.map((category) => (
                                                     <Link
                                                         key={category.name}
-                                                        href={`/browse?category=${encodeURIComponent(category.name)}`}
+                                                        href={`/category/${encodeURIComponent(category.name)}`}
                                                         className="flex items-center gap-4 p-2 rounded-lg hover:bg-[#2a475e]/50 transition-colors group"
                                                     >
                                                         <img
@@ -104,7 +106,7 @@ export default function Navbar({ genres }: NavbarProps) {
                                                 {genres.map((genre) => (
                                                     <Link
                                                         key={genre}
-                                                        href={`/browse?category=${encodeURIComponent(genre)}`}
+                                                        href={`/category/${encodeURIComponent(genre)}`}
                                                         className="text-sm text-[#8f98a0] hover:text-[#66c0f4] py-1.5 transition-colors"
                                                     >
                                                         {genre}
@@ -145,21 +147,10 @@ export default function Navbar({ genres }: NavbarProps) {
                         </div>
 
                         {/* Cart Icon */}
-                        <button className="relative p-2.5 text-[#c7d5e0] hover:text-white hover:bg-white/10 rounded-full transition-colors">
-                            <ShoppingCart size={22} />
-                            <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-[#5c7e10] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                                0
-                            </span>
-                        </button>
+                        <CartBadge />
 
-                        {/* User Avatar */}
-                        <button className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-[#2a475e] hover:border-[#66c0f4] transition-colors">
-                            <img
-                                src="https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg"
-                                alt="User Avatar"
-                                className="w-full h-full object-cover"
-                            />
-                        </button>
+                        {/* User Section */}
+                        <UserDropdown />
 
                         {/* Mobile menu button */}
                         <button
@@ -186,7 +177,7 @@ export default function Navbar({ genres }: NavbarProps) {
                         {TOP_CATEGORIES.map((category) => (
                             <Link
                                 key={category.name}
-                                href={`/browse?category=${encodeURIComponent(category.name)}`}
+                                href={`/category/${encodeURIComponent(category.name)}`}
                                 className="block py-2 text-sm text-[#8f98a0] hover:text-white"
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >

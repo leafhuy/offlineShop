@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { Game } from '@/types/game';
 import { getGameImage } from '@/utils/helpers';
 import { useCurrency } from '@/contexts/CurrencyContext';
@@ -57,6 +58,13 @@ export default function Hero({ games }: HeroProps) {
         <section className="relative">
             {/* Main Display */}
             <div className="relative h-[450px] rounded-lg overflow-hidden group">
+                {/* Clickable Hero Link */}
+                <Link
+                    href={`/game/${currentGame.appid}`}
+                    className="absolute inset-0 z-10 cursor-pointer"
+                    aria-label={`View details for ${currentGame.name}`}
+                />
+
                 {/* Background Image */}
                 <div
                     className="absolute inset-0 bg-cover bg-center transition-all duration-700"
@@ -68,7 +76,7 @@ export default function Hero({ games }: HeroProps) {
                 </div>
 
                 {/* Content */}
-                <div className="relative h-full flex">
+                <div className="relative h-full flex pointer-events-none">
                     {/* Left Content */}
                     <div className="flex-1 flex flex-col justify-end p-8 max-w-xl">
                         <h2 className="text-4xl font-bold text-steam-text-light mb-4 text-shadow-lg">
@@ -107,7 +115,7 @@ export default function Hero({ games }: HeroProps) {
 
                         {/* CTA Button */}
                         <button className="w-fit px-8 py-3 bg-steam-accent-green hover:bg-steam-accent-green/80 
-                             text-black font-bold rounded transition-colors">
+                             text-black font-bold rounded transition-colors pointer-events-auto z-20 relative">
                             Add to Cart
                         </button>
                     </div>
@@ -126,14 +134,14 @@ export default function Hero({ games }: HeroProps) {
                 <button
                     onClick={goToPrevious}
                     className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 
-                   rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                   rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20"
                 >
                     <ChevronLeft size={24} className="text-steam-text-light" />
                 </button>
                 <button
                     onClick={goToNext}
                     className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 
-                   rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                   rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20"
                 >
                     <ChevronRight size={24} className="text-steam-text-light" />
                 </button>

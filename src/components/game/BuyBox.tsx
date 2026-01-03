@@ -2,13 +2,15 @@
 
 import { Game } from '@/types/game';
 import { useCurrency } from '@/contexts/CurrencyContext';
-import { ShoppingCart } from 'lucide-react';
+import AddToCartButton from '@/components/AddToCartButton';
 
 interface BuyBoxProps {
     game: Game;
+    isOwned?: boolean;
+    isInCart?: boolean;
 }
 
-export default function BuyBox({ game }: BuyBoxProps) {
+export default function BuyBox({ game, isOwned = false, isInCart = false }: BuyBoxProps) {
     const { formatPrice } = useCurrency();
     const hasDiscount = game.discount_percent > 0;
     const isFree = game.original_price === 0;
@@ -47,15 +49,12 @@ export default function BuyBox({ game }: BuyBoxProps) {
                     )}
 
                     {/* Add to Cart Button */}
-                    <button className="flex items-center gap-2 px-5 py-2 
-                                     bg-gradient-to-b from-[#75b022] to-[#588a1b]
-                                     hover:from-[#8bc527] hover:to-[#6b9c1f]
-                                     text-white font-medium text-sm rounded
-                                     shadow-[0_2px_4px_rgba(0,0,0,0.4)]
-                                     transition-all active:scale-95">
-                        <ShoppingCart size={16} />
-                        Add to Cart
-                    </button>
+                    <AddToCartButton
+                        appid={game.appid}
+                        price={game.discount_price || game.original_price}
+                        isOwned={isOwned}
+                        isInCart={isInCart}
+                    />
                 </div>
             </div>
         </div>

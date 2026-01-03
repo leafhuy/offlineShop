@@ -45,14 +45,14 @@ export default async function Home({ searchParams }: HomeProps) {
             <GameGrid
                 title="Special Offers"
                 games={specialOffers}
-                viewAllLink="/browse?filter=specials"
+                viewAllLink="/special-offers"
             />
 
             {/* New Releases */}
             <GameGrid
                 title="New & Trending"
                 games={newReleases}
-                viewAllLink="/browse?filter=new"
+                viewAllLink="/new-releases"
             />
 
             {/* Popular Games with Pagination */}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { Game } from '@/types/game';
 import { getGameImage, parseMediaString, parseMovieUrls, parseCommaString } from '@/utils/helpers';
 import { calculateReviewScore, formatReviewCount } from '@/utils/review';
@@ -55,21 +56,21 @@ export default function HoverPreview({ game, position, parentRect }: HoverPrevie
         <div
             style={style}
             className="w-[340px] bg-[#1b2838] border border-[#2a475e] rounded-lg shadow-2xl 
-                 overflow-visible animate-fadeIn pointer-events-none relative"
+                 overflow-visible animate-fadeIn relative"
         >
             {/* Arrow pointer pointing to the game card */}
             <div
                 className={`absolute w-0 h-0 border-solid ${position === 'right'
-                        ? 'border-r-[12px] border-r-[#1b2838] border-y-[10px] border-y-transparent border-l-0 -left-3'
-                        : 'border-l-[12px] border-l-[#1b2838] border-y-[10px] border-y-transparent border-r-0 -right-3'
+                    ? 'border-r-[12px] border-r-[#1b2838] border-y-[10px] border-y-transparent border-l-0 -left-3'
+                    : 'border-l-[12px] border-l-[#1b2838] border-y-[10px] border-y-transparent border-r-0 -right-3'
                     }`}
                 style={{ top: Math.min(Math.max(20, arrowTop), 280) }}
             />
             {/* Arrow border (outer) */}
             <div
                 className={`absolute w-0 h-0 border-solid ${position === 'right'
-                        ? 'border-r-[14px] border-r-[#2a475e] border-y-[12px] border-y-transparent border-l-0 -left-[15px]'
-                        : 'border-l-[14px] border-l-[#2a475e] border-y-[12px] border-y-transparent border-r-0 -right-[15px]'
+                    ? 'border-r-[14px] border-r-[#2a475e] border-y-[12px] border-y-transparent border-l-0 -left-[15px]'
+                    : 'border-l-[14px] border-l-[#2a475e] border-y-[12px] border-y-transparent border-r-0 -right-[15px]'
                     } -z-10`}
                 style={{ top: Math.min(Math.max(18, arrowTop - 2), 278) }}
             />
@@ -141,13 +142,15 @@ export default function HoverPreview({ game, position, parentRect }: HoverPrevie
                     </p>
                     <div className="flex flex-wrap gap-1">
                         {allTags.slice(0, 8).map((tag) => (
-                            <span
+                            <Link
                                 key={tag}
+                                href={`/category/${encodeURIComponent(tag)}`}
+                                onClick={(e) => e.stopPropagation()}
                                 className="px-2 py-0.5 text-[10px] bg-[#384959] text-[#8bb9e1] 
-                                    rounded-sm"
+                                    rounded-sm hover:bg-[#67c1f5] hover:text-white transition-colors cursor-pointer"
                             >
                                 {tag}
-                            </span>
+                            </Link>
                         ))}
                     </div>
                 </div>

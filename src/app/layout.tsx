@@ -5,6 +5,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getAllGenres } from "@/services/game.service";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { CartProvider } from "@/contexts/CartContext";
+import { Toaster } from 'sonner';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,13 +28,23 @@ export default async function RootLayout({
     return (
         <html lang="en">
             <body className={`${inter.className} bg-steam-bg-main text-steam-text-primary min-h-screen`}>
-                <CurrencyProvider>
-                    <Navbar genres={genres} />
-                    <main className="min-h-screen">
-                        {children}
-                    </main>
-                    <Footer />
-                </CurrencyProvider>
+                <AuthProvider>
+                    <CartProvider>
+                        <CurrencyProvider>
+                            <Navbar genres={genres} />
+                            <main className="min-h-screen">
+                                {children}
+                            </main>
+                            <Footer />
+                            <Toaster
+                                theme="dark"
+                                position="top-right"
+                                richColors
+                                closeButton
+                            />
+                        </CurrencyProvider>
+                    </CartProvider>
+                </AuthProvider>
             </body>
         </html>
     );

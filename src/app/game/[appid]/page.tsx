@@ -76,9 +76,12 @@ export default async function GamePage({ params }: GamePageProps) {
                     <ChevronRight size={14} />
                     {genres.length > 0 && (
                         <>
-                            <span className="hover:text-white cursor-pointer transition-colors">
+                            <Link
+                                href={`/category/${encodeURIComponent(genres[0])}`}
+                                className="hover:text-white transition-colors"
+                            >
                                 {genres[0]}
-                            </span>
+                            </Link>
                             <ChevronRight size={14} />
                         </>
                     )}
@@ -159,14 +162,15 @@ export default async function GamePage({ params }: GamePageProps) {
                             <div className="border-t border-[#2a475e] pt-3">
                                 <div className="flex flex-wrap gap-1">
                                     {tags.slice(0, 5).map((tag, index) => (
-                                        <span
+                                        <Link
                                             key={index}
+                                            href={`/category/${encodeURIComponent(tag)}`}
                                             className="px-2 py-0.5 text-xs bg-[#3d4450]/60 text-[#8b929a] 
                                                      rounded hover:bg-[#67c1f5] hover:text-white 
                                                      cursor-pointer transition-colors"
                                         >
                                             {tag}
-                                        </span>
+                                        </Link>
                                     ))}
                                     <span className="px-2 py-0.5 text-xs bg-[#3d4450]/60 text-[#8b929a] 
                                                    rounded hover:bg-[#67c1f5] hover:text-white 
@@ -240,14 +244,15 @@ export default async function GamePage({ params }: GamePageProps) {
                                 </h3>
                                 <div className="flex flex-wrap gap-2">
                                     {genres.map((genre, index) => (
-                                        <span
+                                        <Link
                                             key={index}
+                                            href={`/category/${encodeURIComponent(genre)}`}
                                             className="px-2 py-1 text-xs bg-[#3d4450]/60 text-[#67c1f5] 
                                                      rounded hover:bg-[#67c1f5] hover:text-white 
                                                      cursor-pointer transition-colors"
                                         >
                                             {genre}
-                                        </span>
+                                        </Link>
                                     ))}
                                 </div>
                             </div>

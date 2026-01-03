@@ -384,3 +384,121 @@ export async function searchGames(query: string, limit: number = 6): Promise<Gam
 
     return (data as Game[]) || [];
 }
+
+/**
+ * Get games by genre with pagination
+ * Uses ilike for partial matching since genre is comma-separated
+ */
+export async function getGamesByGenre(
+    genre: string,
+    page: number = 1,
+    limit: number = 50
+): Promise<{ data: Game[]; totalCount: number }> {
+    const offset = (page - 1) * limit;
+
+    // Get total count first
+    const { count, error: countError } = await supabase
+        .from('offlineShop_gamedata')
+        .select('*', { count: 'exact', head: true })
+        .ilike('genre', `%${genre}%`);
+
+    if (countError) {
+        console.error('Error counting games by genre:', countError);
+        return { data: [], totalCount: 0 };
+    }
+
+    // Fetch paginated data
+    const { data, error } = await supabase
+        .from('offlineShop_gamedata')
+        .select('*')
+        .ilike('genre', `%${genre}%`)
+        .order('name', { ascending: true })
+        .range(offset, offset + limit - 1);
+
+    if (error) {
+        console.error('Error fetching games by genre:', error);
+        return { data: [], totalCount: 0 };
+    }
+
+    return { data: data || [], totalCount: count || 0 };
+}
+
+/**
+ * Get all discounted games with pagination
+ * Sorted by discount percentage (highest first)
+ */
+export async function getDiscountedGames(
+    page: number = 1,
+    limit: number = 50
+): Promise<{ data: Game[]; totalCount: number }> {
+    const offset = (page - 1) * limit;
+
+    // Get total count first
+    const { count, error: countError } = await supabase
+        .from('offlineShop_gamedata')
+        .select('*', { count: 'exact', head: true })
+        .gt('discount_percent', 0);
+
+    if (countError) {
+        console.error('Error counting discounted games:', countError);
+        return { data: [], totalCount: 0 };
+    }
+
+    // Fetch paginated data
+    const { data, error } = await supabase
+        .from('offlineShop_gamedata')
+        .select('*')
+        .gt('discount_percent', 0)
+        .order('discount_percent', { ascending: false })
+        .range(offset, offset + limit - 1);
+
+    if (error) {
+        console.error('Error fetching discounted games:', error);
+        return { data: [], totalCount: 0 };
+    }
+
+    return { data: data || [], totalCount: count || 0 };
+}
+
+/**
+ * Get new releases with pagination
+ * Sorted by release date (newest first)
+ * Only includes games with valid release dates
+ */
+export async function getNewReleasesPaginated(
+    page: number = 1,
+    limit: number = 50
+): Promise<{ data: Game[]; totalCount: number }> {
+    // Fetch all games with release dates to filter and sort
+    const { data, error } = await supabase
+        .from('offlineShop_gamedata')
+        .select('*')
+        .not('release_date', 'is', null)
+        .neq('release_date', '');
+
+    if (error) {
+        console.error('Error fetching new releases:', error);
+        return { data: [], totalCount: 0 };
+    }
+
+    if (!data || data.length === 0) {
+        return { data: [], totalCount: 0 };
+    }
+
+    // Filter for games with valid date format
+    const validDateGames = data.filter(game => isValidDateFormat(game.release_date));
+
+    // Sort by release date (newest first)
+    const sortedByDate = validDateGames.sort((a, b) => {
+        const dateA = new Date(a.release_date!).getTime();
+        const dateB = new Date(b.release_date!).getTime();
+        return dateB - dateA;
+    });
+
+    // Apply pagination
+    const offset = (page - 1) * limit;
+    const paginatedData = sortedByDate.slice(offset, offset + limit);
+
+    return { data: paginatedData, totalCount: sortedByDate.length };
+}
+
