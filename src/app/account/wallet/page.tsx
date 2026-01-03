@@ -8,13 +8,13 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { toast } from 'sonner';
 
-// Preset amounts in VND
+// Preset amounts in USD
 const PRESET_AMOUNTS = [
-    { value: 50000, label: '50.000₫' },
-    { value: 100000, label: '100.000₫' },
-    { value: 200000, label: '200.000₫' },
-    { value: 500000, label: '500.000₫' },
-    { value: 1000000, label: '1.000.000₫' },
+    { value: 5, label: '$5.00' },
+    { value: 10, label: '$10.00' },
+    { value: 25, label: '$25.00' },
+    { value: 50, label: '$50.00' },
+    { value: 100, label: '$100.00' },
 ];
 
 export default function WalletPage() {

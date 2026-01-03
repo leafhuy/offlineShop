@@ -63,6 +63,24 @@ export default function AddToCartButton({
         setLoading(false);
     }
 
+    // Free to Play - Go to Steam
+    if (price === 0) {
+        return (
+            <a
+                href={`https://store.steampowered.com/app/${appid}/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex items-center justify-center gap-2 px-4 py-2
+                           bg-[#5c7e10] hover:bg-[#6d8f1a] text-white font-medium rounded 
+                           transition-colors
+                           ${size === 'small' ? 'text-xs py-1.5 px-3' : 'text-sm'}
+                           ${className}`}
+            >
+                Go to Steam
+            </a>
+        );
+    }
+
     // Already owned
     if (isOwned) {
         return (

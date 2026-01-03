@@ -6,6 +6,7 @@ import { Game } from '@/types/game';
 import { getGameImage } from '@/utils/helpers';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { ChevronLeft, ChevronRight, Monitor, Apple, Server } from 'lucide-react';
+import AddToCartButton from '@/components/AddToCartButton';
 
 interface HeroProps {
     games: Game[];
@@ -114,10 +115,14 @@ export default function Hero({ games }: HeroProps) {
                         </div>
 
                         {/* CTA Button */}
-                        <button className="w-fit px-8 py-3 bg-steam-accent-green hover:bg-steam-accent-green/80 
-                             text-black font-bold rounded transition-colors pointer-events-auto z-20 relative">
-                            Add to Cart
-                        </button>
+                        <div className="pointer-events-auto z-20 relative">
+                            <AddToCartButton
+                                key={currentGame.appid}
+                                appid={currentGame.appid}
+                                price={currentGame.discount_price || currentGame.original_price}
+                                className="px-8 py-3 text-base font-bold"
+                            />
+                        </div>
                     </div>
 
                     {/* Right - Featured Image */}

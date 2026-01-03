@@ -166,6 +166,41 @@ export async function getSpecialOffers(limit: number = 10): Promise<Game[]> {
 }
 
 /**
+ * Get a random game for Hero section
+ * Filters for games with 100,000+ positive reviews
+ */
+export async function getHeroGame(): Promise<Game | null> {
+    // Fetch top 100 games
+    const { data, error } = await supabase
+        .from('offlineShop_gamedata')
+        .select('*')
+        .limit(200);
+
+    if (error || !data || data.length === 0) {
+        console.error('Error fetching hero game:', error);
+        return null;
+    }
+
+    // Filter games with 100,000+ positive reviews
+    const qualifiedGames = data.filter(game => {
+        const positive = parseReviewCount(game.positive);
+        return positive >= 100000;
+    });
+
+    if (qualifiedGames.length === 0) {
+        // Fallback: return game with most positive reviews
+        const sorted = [...data].sort((a, b) =>
+            parseReviewCount(b.positive) - parseReviewCount(a.positive)
+        );
+        return sorted[0] || null;
+    }
+
+    // Pick a random game from qualified list
+    const randomIndex = Math.floor(Math.random() * qualifiedGames.length);
+    return qualifiedGames[randomIndex];
+}
+
+/**
  * Check if a date string is a valid parseable date format
  * Returns true for formats like "Jan 1, 2024", "2024-01-01", "1 Jan 2024"
  * Returns false for "Coming Soon", "Q1 2024", "TBD", etc.
